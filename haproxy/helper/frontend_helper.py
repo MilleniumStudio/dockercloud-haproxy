@@ -99,9 +99,9 @@ def config_common_part(port, ssl_bind_string, vhosts):
     # add x-forwarded-porto header if not skipped
     if not SKIP_FORWARDED_PROTO:
         if ssl:
-            frontend_section.append("reqadd X-Forwarded-Proto:\ https")
+            frontend_section.append("http-request add-header X-Forwarded-Proto https")
         else:
-            frontend_section.append("reqadd X-Forwarded-Proto:\ http")
+            frontend_section.append("http-request add-header X-Forwarded-Proto http")
 
     # add maxconn
     frontend_section.append("maxconn %s" % MAXCONN)
@@ -163,11 +163,11 @@ def config_default_frontend_by_port(port, ssl_bind_string):
         frontend = [("bind :%s %s %s" % (port, ssl_bind_string, EXTRA_BIND_SETTINGS.get(port, ""))).strip()]
         # add x-forwarded-porto header if not skipped
         if not SKIP_FORWARDED_PROTO:
-            frontend.append("reqadd X-Forwarded-Proto:\ https")
+            frontend.append("http-request add-header X-Forwarded-Proto https")
     else:
         frontend = [("bind :%s %s" % (port, EXTRA_BIND_SETTINGS.get(port, ""))).strip()]
         if not SKIP_FORWARDED_PROTO:
-            frontend.append("reqadd X-Forwarded-Proto:\ http")
+            frontend.append("http-request add-header X-Forwarded-Proto http")
 
     frontend.append("maxconn %s" % MAXCONN)
 
